@@ -18,7 +18,7 @@ public class ActivityTypeController {
     }
 
     @PostMapping("/category/{categoryId}")
-    public ActivityType createType(
+    public ActivityType create(
             @PathVariable Long categoryId,
             @RequestBody ActivityType type) {
         return typeService.createType(categoryId, type);
@@ -30,7 +30,7 @@ public class ActivityTypeController {
     }
 
     @GetMapping("/{id}")
-    public ActivityType getType(@PathVariable Long id) {
+    public ActivityType getById(@PathVariable Long id) {
         return typeService.getType(id);
     }
 }

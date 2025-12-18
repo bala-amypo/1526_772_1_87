@@ -17,11 +17,11 @@ public class EmissionFactorController {
         this.factorService = factorService;
     }
 
-    @PostMapping("/{activityTypeId}")
+    @PostMapping("/type/{typeId}")
     public EmissionFactor create(
-            @PathVariable Long activityTypeId,
+            @PathVariable Long typeId,
             @RequestBody EmissionFactor factor) {
-        return factorService.createFactor(activityTypeId, factor);
+        return factorService.createFactor(typeId, factor);
     }
 
     @GetMapping("/{id}")
@@ -29,9 +29,9 @@ public class EmissionFactorController {
         return factorService.getFactor(id);
     }
 
-    @GetMapping("/type/{activityTypeId}")
-    public EmissionFactor getByType(@PathVariable Long activityTypeId) {
-        return factorService.getFactorByType(activityTypeId);
+    @GetMapping("/type/{typeId}")
+    public EmissionFactor getByType(@PathVariable Long typeId) {
+        return factorService.getFactorByType(typeId);
     }
 
     @GetMapping

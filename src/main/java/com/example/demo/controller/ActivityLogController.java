@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.dto.ActivityLogRequest;
 import com.example.demo.entity.ActivityLog;
 import com.example.demo.service.ActivityLogService;
 
@@ -23,17 +22,17 @@ public class ActivityLogController {
     public ActivityLog logActivity(
             @PathVariable Long userId,
             @PathVariable Long typeId,
-            @RequestBody ActivityLogRequest request) {
-        return logService.logActivity(userId, typeId, request);
+            @RequestBody ActivityLog log) {
+        return logService.logActivity(userId, typeId, log);
     }
 
     @GetMapping("/user/{userId}")
-    public List<ActivityLog> getLogsByUser(@PathVariable Long userId) {
+    public List<ActivityLog> getByUser(@PathVariable Long userId) {
         return logService.getLogsByUser(userId);
     }
 
     @GetMapping("/user/{userId}/range")
-    public List<ActivityLog> getLogsByDateRange(
+    public List<ActivityLog> getByDateRange(
             @PathVariable Long userId,
             @RequestParam LocalDate start,
             @RequestParam LocalDate end) {
@@ -41,7 +40,7 @@ public class ActivityLogController {
     }
 
     @GetMapping("/{id}")
-    public ActivityLog getLog(@PathVariable Long id) {
+    public ActivityLog getById(@PathVariable Long id) {
         return logService.getLog(id);
     }
 }
