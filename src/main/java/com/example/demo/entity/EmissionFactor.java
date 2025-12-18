@@ -1,60 +1,36 @@
+// src/main/java/com/example/demo/entity/EmissionFactor.java
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
-@Table(name = "emission_factors",
-       uniqueConstraints = @UniqueConstraint(columnNames = "activity_type_id"))
 public class EmissionFactor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "activity_type_id", nullable = false)
-    private ActivityType activityType;
+    private String name;      // Example field
+    private Double factor;    // Example field
 
-    @Column(nullable = false)
-    private Double factorValue;
-
-    @Column(nullable = false)
-    private String unit;
-
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
+    // Constructors
+    public EmissionFactor() {}
+    
+    public EmissionFactor(String name, Double factor) {
+        this.name = name;
+        this.factor = factor;
     }
 
-    public Long getId() {
-        return id;
-    }
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public ActivityType getActivityType() {
-        return activityType;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public void setActivityType(ActivityType activityType) {
-        this.activityType = activityType;
-    }
-
-    public Double getFactorValue() {
-        return factorValue;
-    }
-
-    public void setFactorValue(Double factorValue) {
-        this.factorValue = factorValue;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
+    public Double getFactor() { return factor; }
+    public void setFactor(Double factor) { this.factor = factor; }
 }
