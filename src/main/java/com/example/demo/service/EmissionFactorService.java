@@ -1,7 +1,6 @@
-package com.example.demo.service;
-
-import com.example.demo.entity.EmissionFactor;
-
 public interface EmissionFactorService {
-    EmissionFactor addEmissionFactor(Long activityTypeId, EmissionFactor factor);
+    EmissionFactor createFactor(Long activityTypeId, EmissionFactor factor);
+    EmissionFactor getFactor(Long id);
+    EmissionFactor getFactorByType(Long activityTypeId);
+    List<EmissionFactor> getAllFactors();
 }

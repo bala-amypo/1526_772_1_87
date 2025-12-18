@@ -1,8 +1,5 @@
-package com.example.demo.service;
-
-import com.example.demo.entity.User;
-
 public interface UserService {
-    User register(User user);
-    User getUserByEmail(String email);
+    User registerUser(User user);
+    List<User> getAllUsers();
+    User getUser(Long id);
 }
