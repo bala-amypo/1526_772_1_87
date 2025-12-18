@@ -29,7 +29,6 @@ public class ActivityLogServiceImpl implements ActivityLogService {
 
         if (log.getActivityDate().isAfter(LocalDate.now())) return null;
 
-        // 🔥 List return aagudhu
         List<EmissionFactor> factors =
                 factorRepo.findByActivityTypeId(
                         log.getActivityType().getId()
@@ -40,10 +39,20 @@ public class ActivityLogServiceImpl implements ActivityLogService {
         EmissionFactor factor = factors.get(0);
 
         double emission = log.getQuantity() * factor.getFactor();
-
-
         log.setEstimatedEmission(emission);
 
         return logRepo.save(log);
+    }
+
+    // ✅ ADD THESE TWO METHODS 👇
+
+    @Override
+    public ActivityLog getLog(Long id) {
+        return logRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<ActivityLog> getAllLogs() {
+        return logRepo.findAll();
     }
 }
