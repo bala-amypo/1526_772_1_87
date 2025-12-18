@@ -25,31 +25,27 @@ public class ActivityLogServiceImpl implements ActivityLogService {
     @Override
     public ActivityLog createLog(ActivityLog log) {
 
+        // Validation 1
         if (log.getQuantity() <= 0) return null;
 
+        // Validation 2
         if (log.getActivityDate().isAfter(LocalDate.now())) return null;
 
+        // Get emission factors
         List<EmissionFactor> factors = factorRepo.findAll();
-
-if (factors.isEmpty()) return null;
-
-EmissionFactor factor = factors.get(0);
-
-double emission = log.getQuantity() * factor.getFactor();
-log.setEstimatedEmission(emission);
-
 
         if (factors.isEmpty()) return null;
 
+        // Take first factor
         EmissionFactor factor = factors.get(0);
 
+        // Calculate emission
         double emission = log.getQuantity() * factor.getFactor();
         log.setEstimatedEmission(emission);
 
+        // Save log
         return logRepo.save(log);
     }
-
-    // ✅ ADD THESE TWO METHODS 👇
 
     @Override
     public ActivityLog getLog(Long id) {
