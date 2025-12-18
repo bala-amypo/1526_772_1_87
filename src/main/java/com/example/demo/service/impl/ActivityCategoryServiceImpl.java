@@ -18,6 +18,13 @@ public class ActivityCategoryServiceImpl
 
     @Override
     public ActivityCategory createCategory(ActivityCategory category) {
+
+        // Optional: extra safety for uniqueness
+        repo.findByCategoryName(category.getCategoryName())
+            .ifPresent(c -> {
+                throw new RuntimeException("Category name already exists");
+            });
+
         return repo.save(category);
     }
 
