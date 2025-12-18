@@ -2,7 +2,6 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 public class ActivityLog {
@@ -11,47 +10,51 @@ public class ActivityLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "activity_type_id", nullable = false)
-    private ActivityType activityType;
+    private Long userId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private String action;
 
-    private Double quantity;
+    private LocalDate createdAt;
 
-    private LocalDate activityDate;
-
-    private LocalDateTime loggedAt;
-
-    private Double estimatedEmission;
-
-    @PrePersist
-    public void onCreate() {
-        this.loggedAt = LocalDateTime.now();
-    }
-
+    // Constructors
     public ActivityLog() {}
 
-    // getters & setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public ActivityLog(Long userId, String action, LocalDate createdAt) {
+        this.userId = userId;
+        this.action = action;
+        this.createdAt = createdAt;
+    }
 
-    public ActivityType getActivityType() { return activityType; }
-    public void setActivityType(ActivityType activityType) { this.activityType = activityType; }
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Double getQuantity() { return quantity; }
-    public void setQuantity(Double quantity) { this.quantity = quantity; }
+    public Long getUserId() {
+        return userId;
+    }
 
-    public LocalDate getActivityDate() { return activityDate; }
-    public void setActivityDate(LocalDate activityDate) { this.activityDate = activityDate; }
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-    public LocalDateTime getLoggedAt() { return loggedAt; }
+    public String getAction() {
+        return action;
+    }
 
-    public Double getEstimatedEmission() { return estimatedEmission; }
-    public void setEstimatedEmission(Double estimatedEmission) { this.estimatedEmission = estimatedEmission; }
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
+    }
 }
