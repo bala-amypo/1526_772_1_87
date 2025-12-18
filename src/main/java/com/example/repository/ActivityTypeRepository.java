@@ -1,9 +1,12 @@
 package com.example.demo.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import com.example.demo.entity.ActivityType;
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.demo.entity.ActivityType;
+
 public interface ActivityTypeRepository extends JpaRepository<ActivityType, Long> {
-    List<ActivityType> findByCategory_Id(Long id);
+
+    List<ActivityType> findByCategoryId(Long categoryId);
 }
