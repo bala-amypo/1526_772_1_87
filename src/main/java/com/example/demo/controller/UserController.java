@@ -8,7 +8,7 @@ import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -18,17 +18,17 @@ public class UserController {
     }
 
     @PostMapping
-    public User register(@RequestBody User user) {
+    public User createUser(@RequestBody User user) {
         return userService.registerUser(user);
     }
 
     @GetMapping
-    public List<User> getAll() {
+    public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @GetMapping("/{id}")
-    public User getById(@PathVariable Long id) {
+    public User getUser(@PathVariable Long id) {
         return userService.getUser(id);
     }
 }
