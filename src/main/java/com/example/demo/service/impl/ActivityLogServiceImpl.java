@@ -1,9 +1,10 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.entity.ActivityLog;
 import com.example.demo.entity.EmissionFactor;
 import com.example.demo.repository.ActivityLogRepository;
 import com.example.demo.repository.EmissionFactorRepository;
+import com.example.demo.service.ActivityLogService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,23 +24,40 @@ public class ActivityLogServiceImpl implements ActivityLogService {
     @Override
     public ActivityLog createLog(ActivityLog log) {
 
-        // quantity > 0
-        if (log.getQuantity() <= 0) return null;
+        // Rule 1: quantity > 0
+        if (log.getQuantity() == null || log.getQuantity() <= 0) {
+            return null;
+        }
 
-        // date not future
-        if (log.getActivityDate().isAfter(LocalDate.now())) return null;
+        // Rule 2: activityDate cannot be future
+        if (log.getActivityDate() == null ||
+                log.getActivityDate().isAfter(LocalDate.now())) {
+            return null;
+        }
 
-        // get emission factor
+        // Rule 3: get emission factor using activityType
         EmissionFactor factor = factorRepo
                 .findByActivityTypeId(log.getActivityType().getId())
                 .orElse(null);
 
-        if (factor == null) return null;
+        if (factor == null) {
+            return null;
+        }
 
-        // calculate emission
+        // Rule 4: estimatedEmission = quantity * factorValue
         double emission = log.getQuantity() * factor.getFactorValue();
         log.setEstimatedEmission(emission);
 
         return logRepo.save(log);
+    }
+
+    @Override
+    public ActivityLog getLog(Long id) {
+        return logRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public java.util.List<ActivityLog> getAllLogs() {
+        return logRepo.findAll();
     }
 }
