@@ -13,11 +13,9 @@ public class ActivityLog {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "activity_type_id", nullable = false)
     private ActivityType activityType;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(nullable = false)
@@ -35,56 +33,27 @@ public class ActivityLog {
     @PrePersist
     protected void onCreate() {
         this.loggedAt = LocalDateTime.now();
-
-        // auto-calculate emission
-        // factorValue assumed to be inside ActivityType
-        this.estimatedEmission = this.quantity * this.activityType.getFactorValue();
     }
-
-    public ActivityLog() {}
 
     // getters & setters
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
 
-    public ActivityType getActivityType() {
-        return activityType;
-    }
+    public ActivityType getActivityType() { return activityType; }
+    public void setActivityType(ActivityType activityType) { this.activityType = activityType; }
 
-    public void setActivityType(ActivityType activityType) {
-        this.activityType = activityType;
-    }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 
-    public User getUser() {
-        return user;
-    }
+    public Double getQuantity() { return quantity; }
+    public void setQuantity(Double quantity) { this.quantity = quantity; }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+    public LocalDate getActivityDate() { return activityDate; }
+    public void setActivityDate(LocalDate activityDate) { this.activityDate = activityDate; }
 
-    public Double getQuantity() {
-        return quantity;
-    }
+    public LocalDateTime getLoggedAt() { return loggedAt; }
 
-    public void setQuantity(Double quantity) {
-        this.quantity = quantity;
-    }
-
-    public LocalDate getActivityDate() {
-        return activityDate;
-    }
-
-    public void setActivityDate(LocalDate activityDate) {
-        this.activityDate = activityDate;
-    }
-
-    public LocalDateTime getLoggedAt() {
-        return loggedAt;
-    }
-
-    public Double getEstimatedEmission() {
-        return estimatedEmission;
+    public Double getEstimatedEmission() { return estimatedEmission; }
+    public void setEstimatedEmission(Double estimatedEmission) {
+        this.estimatedEmission = estimatedEmission;
     }
 }

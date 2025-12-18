@@ -1,46 +1,12 @@
-package com.example.demo.entity;
+package com.example.demo.repository;
 
-import jakarta.persistence.*;
+import com.example.demo.entity.EmissionFactor;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Entity
-@Table(name = "emission_factors")
-public class EmissionFactor {
+import java.util.Optional;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public interface EmissionFactorRepository
+        extends JpaRepository<EmissionFactor, Long> {
 
-    @Column(nullable = false)
-    private Double factorValue;
-
-    @OneToOne
-    @JoinColumn(name = "activity_type_id", nullable = false)
-    private ActivityType activityType;
-
-    public EmissionFactor() {}
-
-    // getters & setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Double getFactorValue() {
-        return factorValue;
-    }
-
-    public void setFactorValue(Double factorValue) {
-        this.factorValue = factorValue;
-    }
-
-    public ActivityType getActivityType() {
-        return activityType;
-    }
-
-    public void setActivityType(ActivityType activityType) {
-        this.activityType = activityType;
-    }
+    Optional<EmissionFactor> findByActivityTypeId(Long activityTypeId);
 }

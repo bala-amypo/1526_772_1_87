@@ -1,45 +1,45 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.ActivityLog;
+import com.example.demo.entity.EmissionFactor;
 import com.example.demo.repository.ActivityLogRepository;
+import com.example.demo.repository.EmissionFactorRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
-public class ActivityLogServiceImpl
-        implements ActivityLogService {
+public class ActivityLogServiceImpl implements ActivityLogService {
 
-    private final ActivityLogRepository repo;
+    private final ActivityLogRepository logRepo;
+    private final EmissionFactorRepository factorRepo;
 
-    public ActivityLogServiceImpl(ActivityLogRepository repo) {
-        this.repo = repo;
+    public ActivityLogServiceImpl(ActivityLogRepository logRepo,
+                                  EmissionFactorRepository factorRepo) {
+        this.logRepo = logRepo;
+        this.factorRepo = factorRepo;
     }
 
     @Override
     public ActivityLog createLog(ActivityLog log) {
 
         // quantity > 0
-        if (log.getQuantity() <= 0) {
-            return null;
-        }
+        if (log.getQuantity() <= 0) return null;
 
-        // activityDate cannot be future
-        if (log.getActivityDate().isAfter(LocalDate.now())) {
-            return null;
-        }
+        // date not future
+        if (log.getActivityDate().isAfter(LocalDate.now())) return null;
 
-        return repo.save(log);
-    }
+        // get emission factor
+        EmissionFactor factor = factorRepo
+                .findByActivityTypeId(log.getActivityType().getId())
+                .orElse(null);
 
-    @Override
-    public ActivityLog getLog(Long id) {
-        return repo.findById(id).orElse(null);
-    }
+        if (factor == null) return null;
 
-    @Override
-    public List<ActivityLog> getAllLogs() {
-        return repo.findAll();
+        // calculate emission
+        double emission = log.getQuantity() * factor.getFactorValue();
+        log.setEstimatedEmission(emission);
+
+        return logRepo.save(log);
     }
 }
