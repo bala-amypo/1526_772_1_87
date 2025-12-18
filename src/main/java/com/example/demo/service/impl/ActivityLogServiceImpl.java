@@ -29,10 +29,15 @@ public class ActivityLogServiceImpl implements ActivityLogService {
 
         if (log.getActivityDate().isAfter(LocalDate.now())) return null;
 
-        List<EmissionFactor> factors =
-                factorRepo.findByActivityTypeId(
-                        log.getActivityType().getId()
-                );
+        List<EmissionFactor> factors = factorRepo.findAll();
+
+if (factors.isEmpty()) return null;
+
+EmissionFactor factor = factors.get(0);
+
+double emission = log.getQuantity() * factor.getFactor();
+log.setEstimatedEmission(emission);
+
 
         if (factors.isEmpty()) return null;
 
