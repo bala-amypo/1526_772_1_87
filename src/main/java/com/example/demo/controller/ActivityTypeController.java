@@ -8,7 +8,7 @@ import com.example.demo.entity.ActivityType;
 import com.example.demo.service.ActivityTypeService;
 
 @RestController
-@RequestMapping("/api/types")
+@RequestMapping("/types")
 public class ActivityTypeController {
 
     private final ActivityTypeService typeService;
@@ -17,7 +17,7 @@ public class ActivityTypeController {
         this.typeService = typeService;
     }
 
-    @PostMapping("/category/{categoryId}")
+    @PostMapping("/{categoryId}")
     public ActivityType create(
             @PathVariable Long categoryId,
             @RequestBody ActivityType type) {

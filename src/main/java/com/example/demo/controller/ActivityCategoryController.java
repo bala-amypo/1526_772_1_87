@@ -8,7 +8,7 @@ import com.example.demo.entity.ActivityCategory;
 import com.example.demo.service.ActivityCategoryService;
 
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping("/categories")
 public class ActivityCategoryController {
 
     private final ActivityCategoryService categoryService;

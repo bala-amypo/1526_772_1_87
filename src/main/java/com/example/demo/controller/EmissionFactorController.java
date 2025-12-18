@@ -8,7 +8,7 @@ import com.example.demo.entity.EmissionFactor;
 import com.example.demo.service.EmissionFactorService;
 
 @RestController
-@RequestMapping("/api/factors")
+@RequestMapping("/factors")
 public class EmissionFactorController {
 
     private final EmissionFactorService factorService;
@@ -17,25 +17,20 @@ public class EmissionFactorController {
         this.factorService = factorService;
     }
 
-    @PostMapping("/type/{typeId}")
+    @PostMapping("/{typeId}")
     public EmissionFactor create(
             @PathVariable Long typeId,
             @RequestBody EmissionFactor factor) {
         return factorService.createFactor(typeId, factor);
     }
 
-    @GetMapping("/{id}")
-    public EmissionFactor getById(@PathVariable Long id) {
-        return factorService.getFactor(id);
-    }
-
-    @GetMapping("/type/{typeId}")
-    public EmissionFactor getByType(@PathVariable Long typeId) {
-        return factorService.getFactorByType(typeId);
-    }
-
     @GetMapping
     public List<EmissionFactor> getAll() {
         return factorService.getAllFactors();
+    }
+
+    @GetMapping("/{id}")
+    public EmissionFactor getById(@PathVariable Long id) {
+        return factorService.getFactor(id);
     }
 }
