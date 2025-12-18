@@ -39,8 +39,8 @@ public class ActivityLogServiceImpl implements ActivityLogService {
 
         EmissionFactor factor = factors.get(0);
 
-        double emission =
-                log.getQuantity() * factor.getEmissionValue();
+        double emission = log.getQuantity() * factor.getFactor();
+
 
         log.setEstimatedEmission(emission);
 
