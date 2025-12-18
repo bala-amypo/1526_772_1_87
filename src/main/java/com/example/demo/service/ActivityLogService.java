@@ -1,16 +1,49 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.entity.ActivityLog;
+import com.example.demo.entity.EmissionFactor;
+import com.example.demo.repository.ActivityLogRepository;
+import com.example.demo.repository.EmissionFactorRepository;
+import com.example.demo.service.ActivityLogService;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.util.List;
 
-public interface ActivityLogService {
+@Service
+public class ActivityLogServiceImpl implements ActivityLogService {
 
-    // Create a new activity log
-    ActivityLog createLog(ActivityLog log);
+    private final ActivityLogRepository logRepo;
+    private final EmissionFactorRepository factorRepo;
 
-    // Get a single log by ID
-    ActivityLog getLog(Long id);
+    public ActivityLogServiceImpl(ActivityLogRepository logRepo,
+                                  EmissionFactorRepository factorRepo) {
+        this.logRepo = logRepo;
+        this.factorRepo = factorRepo;
+    }
 
-    // Get all activity logs
-    List<ActivityLog> getAllLogs();
+    @Override
+    public ActivityLog createLog(ActivityLog log) {
+
+        if (log.getQuantity() <= 0) return null;
+
+        if (log.getActivityDate().isAfter(LocalDate.now())) return null;
+
+        // 👇 List ah vangrom
+        List<EmissionFactor> factors =
+                factorRepo.findByActivityTypeId(
+                        log.getActivityType().getId()
+                );
+
+        if (factors.isEmpty()) return null;
+
+        // 👇 first factor use pannrom
+        EmissionFactor factor = factors.get(0);
+
+        // ⚠️ getter name correct-a irukkanum
+        double emission = log.getQuantity() * factor.getEmissionValue();
+        log.setEstimatedEmission(emission);
+
+        return logRepo.save(log);
+    }
 }
