@@ -1,5 +1,13 @@
 package com.example.demo.exception;
 
+public class ResourceNotFoundException extends RuntimeException {
+
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+}
+package com.example.demo.exception;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,21 +20,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // For "User not found", "Category not found", etc.
+    // 404 - entity not found
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleNotFound(ResourceNotFoundException ex) {
+    public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    // For business validation errors
+    // 400 - business validation errors
     @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<String> handleValidation(ValidationException ex) {
+    public ResponseEntity<String> handleValidationException(ValidationException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    // For @Valid field-level validation errors
+    // 400 - @Valid field validation errors
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationErrors(
+    public ResponseEntity<Map<String, String>> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex) {
 
         Map<String, String> errors = new HashMap<>();
@@ -40,9 +48,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    // Optional: fallback for unexpected errors
+    // 500 - fallback
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGlobal(Exception ex) {
+    public ResponseEntity<String> handleGenericException(Exception ex) {
         return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
