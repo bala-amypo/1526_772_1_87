@@ -10,24 +10,25 @@ import java.util.List;
 @RequestMapping("/factors")
 public class EmissionFactorController {
 
-    private final EmissionFactorService service;
+    private final EmissionFactorService factorService;
 
-    public EmissionFactorController(EmissionFactorService service) {
-        this.service = service;
+    public EmissionFactorController(EmissionFactorService factorService) {
+        this.factorService = factorService;
     }
 
-    @PostMapping
-    public EmissionFactor createFactor(@RequestBody EmissionFactor factor) {
-        return service.createFactor(factor);
+    @PostMapping("/{typeId}")
+    public EmissionFactor create(@PathVariable Long typeId,
+                                 @RequestBody EmissionFactor factor) {
+        return factorService.createFactor(typeId, factor);
     }
 
     @GetMapping("/{id}")
-    public EmissionFactor getFactor(@PathVariable Long id) {
-        return service.getFactor(id);
+    public EmissionFactor get(@PathVariable Long id) {
+        return factorService.getFactor(id);
     }
 
     @GetMapping
-    public List<EmissionFactor> getAllFactors() {
-        return service.getAllFactors();
+    public List<EmissionFactor> getAll() {
+        return factorService.getAllFactors();
     }
 }

@@ -4,30 +4,42 @@ import com.example.demo.entity.ActivityLog;
 import com.example.demo.service.ActivityLogService;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/activity-logs")
+@RequestMapping("/logs")
 public class ActivityLogController {
 
-    private final ActivityLogService service;
+    private final ActivityLogService logService;
 
-    public ActivityLogController(ActivityLogService service) {
-        this.service = service;
+    public ActivityLogController(ActivityLogService logService) {
+        this.logService = logService;
     }
 
-    @PostMapping
-    public ActivityLog createLog(@RequestBody ActivityLog log) {
-        return service.createLog(log);
+    @PostMapping("/{userId}/{typeId}")
+    public ActivityLog log(@PathVariable Long userId,
+                           @PathVariable Long typeId,
+                           @RequestBody ActivityLog log) {
+        return logService.logActivity(userId, typeId, log);
     }
 
     @GetMapping("/{id}")
-    public ActivityLog getLog(@PathVariable Long id) {
-        return service.getLog(id);
+    public ActivityLog get(@PathVariable Long id) {
+        return logService.getLog(id);
     }
 
-    @GetMapping
-    public List<ActivityLog> getAllLogs() {
-        return service.getAllLogs();
+    @GetMapping("/user/{userId}")
+    public List<ActivityLog> getByUser(@PathVariable Long userId) {
+        return logService.getLogsByUser(userId);
+    }
+
+    @GetMapping("/user/{userId}/range")
+    public List<ActivityLog> getByUserAndDate(
+            @PathVariable Long userId,
+            @RequestParam LocalDate start,
+            @RequestParam LocalDate end) {
+
+        return logService.getLogsByUserAndDate(userId, start, end);
     }
 }

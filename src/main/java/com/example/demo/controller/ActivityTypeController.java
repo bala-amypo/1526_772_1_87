@@ -10,24 +10,25 @@ import java.util.List;
 @RequestMapping("/types")
 public class ActivityTypeController {
 
-    private final ActivityTypeService service;
+    private final ActivityTypeService typeService;
 
-    public ActivityTypeController(ActivityTypeService service) {
-        this.service = service;
+    public ActivityTypeController(ActivityTypeService typeService) {
+        this.typeService = typeService;
     }
 
-    @PostMapping
-    public ActivityType createType(@RequestBody ActivityType type) {
-        return service.createType(type);
+    @PostMapping("/{categoryId}")
+    public ActivityType create(@PathVariable Long categoryId,
+                               @RequestBody ActivityType type) {
+        return typeService.createType(categoryId, type);
     }
 
     @GetMapping("/{id}")
-    public ActivityType getType(@PathVariable Long id) {
-        return service.getType(id);
+    public ActivityType get(@PathVariable Long id) {
+        return typeService.getType(id);
     }
 
-    @GetMapping
-    public List<ActivityType> getAllTypes() {
-        return service.getAllTypes();
+    @GetMapping("/category/{categoryId}")
+    public List<ActivityType> getByCategory(@PathVariable Long categoryId) {
+        return typeService.getTypesByCategory(categoryId);
     }
 }

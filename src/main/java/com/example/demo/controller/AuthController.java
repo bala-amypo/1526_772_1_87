@@ -1,11 +1,12 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.LoginRequest;
-import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
 import com.example.demo.security.JwtUtil;
 import com.example.demo.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -20,26 +21,17 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public User register(@RequestBody RegisterRequest request) {
-        User user = new User();
-        user.setFullName(request.getFullName());
-        user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword()); // hash later
-        return userService.registerUser(user);
+    public ResponseEntity<User> register(@RequestBody User user) {
+        return ResponseEntity.ok(userService.registerUser(user));
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) {
-        User user = userService.getByEmail(request.getEmail());
+    public ResponseEntity<Map<String, String>> login(@RequestBody User user) {
 
-        if (!user.getPassword().equals(request.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
-        }
+        User dbUser = userService.getByEmail(user.getEmail());
 
-        return jwtUtil.generateToken(
-                user.getId(),
-                user.getEmail(),
-                user.getRole()
-        );
+        String token = jwtUtil.generateTokenForUser(dbUser);
+
+        return ResponseEntity.ok(Map.of("token", token));
     }
 }
