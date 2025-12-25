@@ -1,8 +1,11 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Table(name = "users")
 public class User {
@@ -22,22 +25,8 @@ public class User {
 
     private LocalDateTime createdAt;
 
-    public User() {
-    }
-
-    public User(Long id, String fullName, String email, String password, String role, LocalDateTime createdAt) {
-        this.id = id;
-        this.fullName = fullName;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.createdAt = createdAt;
-    }
-
     @PrePersist
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
-
-    // getters and setters
 }

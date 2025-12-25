@@ -1,8 +1,11 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Table(name = "activity_categories")
 public class ActivityCategory {
@@ -18,20 +21,8 @@ public class ActivityCategory {
 
     private LocalDateTime createdAt;
 
-    public ActivityCategory() {
-    }
-
-    public ActivityCategory(Long id, String categoryName, String description, LocalDateTime createdAt) {
-        this.id = id;
-        this.categoryName = categoryName;
-        this.description = description;
-        this.createdAt = createdAt;
-    }
-
     @PrePersist
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
-
-    // getters and setters
 }

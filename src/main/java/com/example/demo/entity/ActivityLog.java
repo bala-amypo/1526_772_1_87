@@ -1,9 +1,12 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Table(name = "activity_logs")
 public class ActivityLog {
@@ -26,25 +29,8 @@ public class ActivityLog {
 
     private Double estimatedEmission;
 
-    public ActivityLog() {
-    }
-
-    public ActivityLog(Long id, ActivityType activityType, User user,
-                       Double quantity, LocalDate activityDate,
-                       LocalDateTime loggedAt, Double estimatedEmission) {
-        this.id = id;
-        this.activityType = activityType;
-        this.user = user;
-        this.quantity = quantity;
-        this.activityDate = activityDate;
-        this.loggedAt = loggedAt;
-        this.estimatedEmission = estimatedEmission;
-    }
-
     @PrePersist
     public void onCreate() {
         this.loggedAt = LocalDateTime.now();
     }
-
-    // getters and setters
 }
