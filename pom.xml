@@ -104,6 +104,15 @@
 </dependency>
 
 
+<!-- TestNG for your test classes -->
+<dependency>
+    <groupId>org.testng</groupId>
+    <artifactId>testng</artifactId>
+    <version>7.8.1</version>
+    <scope>test</scope>
+</dependency>
+
+
 
     </dependencies>
 
