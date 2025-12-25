@@ -1,33 +1,60 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
+import com.example.demo.entity.ActivityType;
 import com.example.demo.entity.EmissionFactor;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.exception.ValidationException;
+import com.example.demo.repository.ActivityTypeRepository;
 import com.example.demo.repository.EmissionFactorRepository;
+import com.example.demo.service.EmissionFactorService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class EmissionFactorServiceImpl
-        implements EmissionFactorService {
+public class EmissionFactorServiceImpl implements EmissionFactorService {
 
-    private final EmissionFactorRepository repo;
+    private final EmissionFactorRepository factorRepository;
+    private final ActivityTypeRepository typeRepository;
 
-    public EmissionFactorServiceImpl(EmissionFactorRepository repo) {
-        this.repo = repo;
+    // ⚠️ Constructor order EXACT
+    public EmissionFactorServiceImpl(EmissionFactorRepository factorRepository,
+                                     ActivityTypeRepository typeRepository) {
+        this.factorRepository = factorRepository;
+        this.typeRepository = typeRepository;
     }
 
     @Override
-    public EmissionFactor createFactor(EmissionFactor factor) {
-        return repo.save(factor);
+    public EmissionFactor createFactor(Long activityTypeId, EmissionFactor factor) {
+
+        ActivityType type = typeRepository.findById(activityTypeId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Category not found"));
+
+        if (factor.getFactorValue() == null || factor.getFactorValue() <= 0) {
+            throw new ValidationException("Factor value must be greater than zero");
+        }
+
+        factor.setActivityType(type);
+        return factorRepository.save(factor);
     }
 
     @Override
     public EmissionFactor getFactor(Long id) {
-        return repo.findById(id).orElse(null);
+        return factorRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Emission factor not found"));
+    }
+
+    @Override
+    public EmissionFactor getFactorByType(Long activityTypeId) {
+        return factorRepository.findByActivityType_Id(activityTypeId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Emission factor not found"));
     }
 
     @Override
     public List<EmissionFactor> getAllFactors() {
-        return repo.findAll();
+        return factorRepository.findAll();
     }
 }
