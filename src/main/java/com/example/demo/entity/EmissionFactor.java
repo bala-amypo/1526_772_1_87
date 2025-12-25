@@ -1,36 +1,40 @@
-// src/main/java/com/example/demo/entity/EmissionFactor.java
 package com.example.demo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "emission_factors")
 public class EmissionFactor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;      // Example field
-    private Double factor;    // Example field
+    @ManyToOne
+    private ActivityType activityType;
 
-    // Constructors
-    public EmissionFactor() {}
-    
-    public EmissionFactor(String name, Double factor) {
-        this.name = name;
-        this.factor = factor;
+    private Double factorValue;
+
+    private String unit;
+
+    private LocalDateTime createdAt;
+
+    public EmissionFactor() {
     }
 
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public EmissionFactor(Long id, ActivityType activityType, Double factorValue, String unit, LocalDateTime createdAt) {
+        this.id = id;
+        this.activityType = activityType;
+        this.factorValue = factorValue;
+        this.unit = unit;
+        this.createdAt = createdAt;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 
-    public Double getFactor() { return factor; }
-    public void setFactor(Double factor) { this.factor = factor; }
+    // getters and setters
 }
