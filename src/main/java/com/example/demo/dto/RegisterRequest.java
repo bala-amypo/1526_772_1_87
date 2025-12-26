@@ -7,6 +7,26 @@ public class RegisterRequest {
     private String password;
     private String role;
 
+    // ✅ No-argument constructor (default)
+    public RegisterRequest() {
+    }
+
+    // ✅ Constructor with name, email, password
+    public RegisterRequest(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
+
+    // ✅ Constructor with name, email, password, role
+    public RegisterRequest(String name, String email, String password, String role) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
+    // Getters and Setters
     public String getName() {
         return name;
     }
