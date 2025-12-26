@@ -1,23 +1,20 @@
-package com.example.demo.dto;
+package com.example.demo.controller;
 
-public class ActivityLogRequest {
+import com.example.demo.entity.EmissionFactor;
+import com.example.demo.service.EmissionFactorService;
+import org.springframework.web.bind.annotation.*;
 
-    private Double quantity;
-    private String unit;
+@RestController
+@RequestMapping("/api/factors")
+public class EmissionFactorController {
+    private final EmissionFactorService factorService;
 
-    public Double getQuantity() {
-        return quantity;
+    public EmissionFactorController(EmissionFactorService factorService) {
+        this.factorService = factorService;
     }
 
-    public void setQuantity(Double quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
+    @GetMapping("/type/{typeId}")
+    public EmissionFactor getFactorByType(@PathVariable Long typeId) {
+        return factorService.getFactorByType(typeId);
     }
 }
