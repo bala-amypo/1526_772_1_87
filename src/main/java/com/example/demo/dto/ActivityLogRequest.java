@@ -1,20 +1,20 @@
-package com.example.demo.controller;
+package com.example.demo.dto;
 
-import com.example.demo.entity.EmissionFactor;
-import com.example.demo.service.EmissionFactorService;
-import org.springframework.web.bind.annotation.*;
+import java.time.LocalDate;
 
-@RestController
-@RequestMapping("/api/factors")
-public class EmissionFactorController {
-    private final EmissionFactorService factorService;
+public class ActivityLogRequest {
+    private Double quantity;
+    private LocalDate activityDate;
 
-    public EmissionFactorController(EmissionFactorService factorService) {
-        this.factorService = factorService;
+    public ActivityLogRequest() {}
+
+    public ActivityLogRequest(Double quantity, LocalDate activityDate) {
+        this.quantity = quantity;
+        this.activityDate = activityDate;
     }
 
-    @GetMapping("/type/{typeId}")
-    public EmissionFactor getFactorByType(@PathVariable Long typeId) {
-        return factorService.getFactorByType(typeId);
-    }
+    public Double getQuantity() { return quantity; }
+    public void setQuantity(Double quantity) { this.quantity = quantity; }
+    public LocalDate getActivityDate() { return activityDate; }
+    public void setActivityDate(LocalDate activityDate) { this.activityDate = activityDate; }
 }
