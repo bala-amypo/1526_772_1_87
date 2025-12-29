@@ -8,6 +8,7 @@ import com.example.demo.service.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
 
 import java.util.Map;
 
@@ -23,7 +24,7 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
     }
-
+    @Operation(security = {})
     @PostMapping("/register")
     public Map<String, Object> register(@RequestBody RegisterRequest request) {
         User user = new User(null, request.getName(), request.getEmail(), request.getPassword(), "USER", null);
@@ -31,7 +32,7 @@ public class AuthController {
         String token = jwtUtil.generateTokenForUser(created);
         return Map.of("user", created, "token", token);
     }
-
+    @Operation(security = {})
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody LoginRequest request) {
         authenticationManager.authenticate(
