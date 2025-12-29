@@ -3,26 +3,27 @@ package com.example.demo.security;
 import com.example.demo.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
-import java.security.Key;
+
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
 public class JwtUtil {
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    // For HS256 algorithm, use SecretKey
+    private final SecretKey secretKey = Keys.secretKeyFor(io.jsonwebtoken.SignatureAlgorithm.HS256);
     private final long expiration = 86400000; // 24 hours
 
     public String generateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(key)
+                .claims(claims)  // New API - claims() instead of setClaims()
+                .subject(subject)  // New API - subject() instead of setSubject()
+                .issuedAt(new Date())  // New API - issuedAt() instead of setIssuedAt()
+                .expiration(new Date(System.currentTimeMillis() + expiration))  // expiration() instead of setExpiration()
+                .signWith(secretKey)  // Uses SecretKey directly
                 .compact();
     }
 
@@ -35,31 +36,27 @@ public class JwtUtil {
     }
 
     public String extractUsername(String token) {
-        return getClaims(token).getSubject();
+        return extractAllClaims(token).getSubject();
     }
 
     public String extractRole(String token) {
-        return (String) getClaims(token).get("role");
+        return extractAllClaims(token).get("role", String.class);
     }
 
     public Long extractUserId(String token) {
-        Object userId = getClaims(token).get("userId");
-        if (userId instanceof Integer) {
-            return ((Integer) userId).longValue();
-        }
-        return (Long) userId;
+        return extractAllClaims(token).get("userId", Long.class);
     }
 
-    private Claims getClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
+    private Claims extractAllClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)  // New API - verifyWith() instead of setSigningKey()
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)  // New API - parseSignedClaims() instead of parseClaimsJws()
+                .getPayload();
     }
 
     public TokenWrapper parseToken(String token) {
-        return new TokenWrapper(getClaims(token));
+        return new TokenWrapper(extractAllClaims(token));
     }
 
     public boolean isTokenValid(String token, String username) {
@@ -72,7 +69,7 @@ public class JwtUtil {
     }
 
     private boolean isTokenExpired(String token) {
-        return getClaims(token).getExpiration().before(new Date());
+        return extractAllClaims(token).getExpiration().before(new Date());
     }
 
     public static class TokenWrapper {
